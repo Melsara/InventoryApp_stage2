@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Bookshelf</string>
+    <string name="dummy_productname">Dummy Product</string>
+    <string name="dummy_title">Dummy Title</string>
+    <string name="dummy_author">Dummy Author</string>
+    <string name="dummy_supplierName">Dummy Supplier Name</string>
+    <string name="dummy_supplierPhoneNumber">00 00 00 00</string>
+    <string name="insert_success">Saved with id:  </string>
+    <string name="insert_failure">Error in saving</string>
+    <string name="not_a_book">Not a book</string>
+    <string name="is_a_book">Is a book</string>
+    <string name="empty_view_subtitle_text">Try to add new products clicking on the button or adding dummy data.</string>
+    <string name="empty_view_title_text">A bit lonely, here...</string>
+    <string name="button_sale">Sale</string>
+    <string name="label_price">Price:</string>
+    <string name="label_quantity">Quantity left:</string>
+</resources>

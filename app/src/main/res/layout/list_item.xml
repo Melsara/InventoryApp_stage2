@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Layout for a single list item in the list of pets -->
+
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/bottom_rl"
+        android:orientation="horizontal"
+        android:layout_width="@dimen/swipe_bg_width"
+        android:layout_height="@dimen/swipe_bg_height"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_lr"
+        android:orientation="horizontal"
+        android:layout_width="@dimen/swipe_bg_width"
+        android:layout_height="@dimen/swipe_bg_height"
+        android:background="@color/colorAccent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_margin">
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/ListItemMain"
+                tools:text="Name of the product" />
+
+            <LinearLayout
+                android:id="@+id/summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name">
+
+                <TextView
+                    android:id="@+id/label_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/tv_margin"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/label_price"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="#AEB6BD" />
+
+                <TextView
+                    android:id="@+id/price"
+                    style="@style/ListItemSecondary"
+                    tools:text="1111.11" />
+
+                <TextView
+                    android:id="@+id/label_quantity"
+                    style="@style/ListItemSecondary"
+                    android:text="@string/label_quantity" />
+
+                <TextView
+                    android:id="@+id/quantity"
+                    style="@style/ListItemSecondary"
+                    tools:text="9999" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@color/colorAccent"
+                android:shadowColor="@color/colorPrimaryDark"
+                android:text="@string/button_sale" />
+        </RelativeLayout>
+    </LinearLayout>
+</com.daimajia.swipe.SwipeLayout>

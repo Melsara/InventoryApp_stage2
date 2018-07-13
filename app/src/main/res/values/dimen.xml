@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Margin around the floating action button in CatalogActivity -->
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Common margin value used throughout the app -->
+    <dimen name="activity_margin">16dp</dimen>
+
+    <dimen name="tv_margin">8dp</dimen>
+
+    <!--Swipe background -->
+    <dimen name="swipe_bg_width">100dp</dimen>
+    <dimen name="swipe_bg_height">120dp</dimen>
+</resources>
