@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,17 +13,16 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.CursorSwipeAdapter;
 
 import eu.escapeadvisor.bookshelf.EditorActivity;
-import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
-
 import eu.escapeadvisor.bookshelf.R;
+import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 public class BookCursorAdapter extends CursorSwipeAdapter {
 
     private SwipeLayout swipeLayout;
     private boolean swipedLeftToRight = false;
 
-    public BookCursorAdapter (Context context, Cursor c) {
-        super (context, c, 0);
+    public BookCursorAdapter(Context context, Cursor c) {
+        super(context, c, 0);
     }
 
     @Override
@@ -41,18 +38,18 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
         String productName = cursor.getString(productNameColumnIndex);
         tvName.setText(productName);
 
-        TextView tvPrice =  view.findViewById(R.id.price);
+        TextView tvPrice = view.findViewById(R.id.price);
         int priceColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRICE);
         String productPrice = cursor.getString(priceColumnIndex);
         tvPrice.setText(productPrice);
 
         TextView tvQuantity = view.findViewById(R.id.quantity);
-        int quantityColumnIndex =cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_QUANTITY);
+        int quantityColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_QUANTITY);
         String productQuantity = cursor.getString(quantityColumnIndex);
         tvQuantity.setText(productQuantity);
 
         //setting swipe actions on the list items
-        swipeLayout =  view.findViewById(R.id.swipe);
+        swipeLayout = view.findViewById(R.id.swipe);
         swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         addSwipeLeftToRight(view);
 
@@ -65,7 +62,7 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
             @Override
             public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                 //everything here is for checking which direction user swiped
-                if(leftOffset > 200) {
+                if (leftOffset > 200) {
                     swipedLeftToRight = true;
                 } else if (leftOffset == 0)
                     swipedLeftToRight = false;
@@ -80,14 +77,15 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
             public void onOpen(SwipeLayout layout) {
                 if (swipedLeftToRight) {
                     //trigger delete action on the swiped item
-                Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
                     Intent deleteIntent = new Intent(context, EditorActivity.class);
                     deleteIntent.putExtra("Delete mode: expecting swipedLeftToRight to be true", swipedLeftToRight);
                     context.startActivity(deleteIntent);
-                swipedLeftToRight = false;
-                return;
+                    swipedLeftToRight = false;
+                    return;
                 } else if (!swipedLeftToRight) {
                     //trigger edit action on the swiped item
+                    Toast.makeText(context, "swiped right to left", Toast.LENGTH_SHORT).show();
                     Intent editIntent = new Intent(context, EditorActivity.class);
                     editIntent.putExtra("Edit mode: expecting swipedLeftToRight to be false", swipedLeftToRight);
                     context.startActivity(editIntent);

@@ -11,4 +11,6 @@
     <!--Swipe background -->
     <dimen name="swipe_bg_width">100dp</dimen>
     <dimen name="swipe_bg_height">120dp</dimen>
+
+    <dimen name="editor_buttons">52dp</dimen>
 </resources>

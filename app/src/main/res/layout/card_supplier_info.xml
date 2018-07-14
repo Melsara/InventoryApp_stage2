@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_margin"
+    android:padding="@dimen/activity_margin"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/activity_margin"
+    tools:context="eu.escapeadvisor.bookshelf.EditorActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true" android:focusableInTouchMode="true">
+
+        <TextView
+            android:id="@+id/category_title"
+            style="@style/CategoryTitle"
+            android:text="@string/label_cat_supplierInfo" />
+
+        <LinearLayout
+            android:id="@+id/supplier_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/category_title"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/LabelEditText"
+                android:text="@string/label_supplierName" />
+
+            <EditText
+                style="@style/EditText"
+                android:hint="@string/label_editext_supplierName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/supplier_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/supplier_name"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/LabelEditText"
+                android:text="@string/label_supplierPhoneNumber" />
+
+            <EditText
+                style="@style/EditText"
+                android:hint="@string/label_editext_supplierPhoneNumber"
+                android:inputType="phone"/>
+        </LinearLayout>
+
+            <Button
+                style="@style/Buttons"
+                android:layout_below="@id/supplier_phone_number"
+                android:layout_margin="@dimen/activity_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/button_order" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

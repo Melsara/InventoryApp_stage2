@@ -12,6 +12,21 @@
     <string name="empty_view_subtitle_text">Try to add new products clicking on the button or adding dummy data.</string>
     <string name="empty_view_title_text">A bit lonely, here...</string>
     <string name="button_sale">Sale</string>
+    <string name="button_save_item">Save item</string>
+    <string name="button_delete_item">Delete item</string>
+    <string name="button_increase_quantity">+</string>
+    <string name="button_decrease_quantity">-</string>
+    <string name="button_order">Order</string>
     <string name="label_price">Price:</string>
+    <string name="label_editText_price">Insert price</string>
     <string name="label_quantity">Quantity left:</string>
+    <string name="label_editText_quantity">Insert quantity</string>
+    <string name="label_cat_productInfo">Product Info</string>
+    <string name="label_cat_supplierInfo">Supplier Info</string>
+    <string name="label_supplierName">Supplier Name:</string>
+    <string name="label_supplierPhoneNumber">Supplier Phone Number:</string>
+    <string name="label_editext_supplierName">Insert supplier name</string>
+    <string name="label_editext_supplierPhoneNumber">Insert supplier phone number</string>
+    <string name="label_productName">Product Name:</string>
+    <string name="label_editText_productName">Insert product name</string>
 </resources>

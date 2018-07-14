@@ -25,4 +25,48 @@
         <item name="android:layout_marginRight">@dimen/tv_margin</item>
     </style>
 
+    <style name="Buttons">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_margin">@dimen/tv_margin</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
+    <style name="CategoryTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@color/colorMainText</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_margin">@dimen/tv_margin</item>
+    </style>
+
+    <style name="LabelEditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_marginLeft">@dimen/activity_margin</item>
+        <item name="android:layout_marginRight">@dimen/tv_margin</item>
+        <item name="android:layout_marginTop">@dimen/tv_margin</item>
+        <item name="android:layout_marginBottom">@dimen/tv_margin</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:layout_marginLeft">@dimen/activity_margin</item>
+        <item name="android:layout_marginRight">@dimen/tv_margin</item>
+        <item name="android:layout_marginTop">@dimen/tv_margin</item>
+        <item name="android:layout_marginBottom">@dimen/tv_margin</item>
+    </style>
+
 </resources>
