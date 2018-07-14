@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private BookCursorAdapter bookCursorAdapter;
     private static final int BOOK_LOADER = 0;
-    private Toast insertToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

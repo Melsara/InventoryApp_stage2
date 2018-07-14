@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.CursorSwipeAdapter;
@@ -18,6 +20,7 @@ import eu.escapeadvisor.bookshelf.R;
 public class BookCursorAdapter extends CursorSwipeAdapter {
 
     private SwipeLayout swipeLayout;
+    private boolean swipedLeftToRight = false;
 
     public BookCursorAdapter (Context context, Cursor c) {
         super (context, c, 0);
@@ -29,7 +32,7 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
         TextView tvName = view.findViewById(R.id.name);
         int productNameColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
@@ -48,8 +51,13 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
 
         swipeLayout =  view.findViewById(R.id.swipe);
         swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        swipeLayout.addDrag(SwipeLayout.DragEdge.Left, view.findViewById(R.id.bottom_rl));
-        swipeLayout.addDrag(SwipeLayout.DragEdge.Right, view.findViewById(R.id.bottom_lr));
+        addSwipeLeftToRight(view);
+
+        ImageView edit = view.findViewById(R.id.pencil);
+        edit.setImageResource(R.drawable.baseline_edit_white_18);
+        ImageView delete = view.findViewById(R.id.trash);
+        delete.setImageResource(R.drawable.baseline_delete_white_18);
+
         swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
             @Override
             public void onClose(SwipeLayout layout) {
@@ -58,7 +66,11 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
 
             @Override
             public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                //you are swiping.
+                if(leftOffset > 0) {
+                    Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
             }
 
             @Override
@@ -68,7 +80,7 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
 
             @Override
             public void onOpen(SwipeLayout layout) {
-                //when the BottomView totally show.
+
             }
 
             @Override
@@ -92,5 +104,9 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
     @Override
     public void closeAllItems() {
 
+    }
+
+    private void addSwipeLeftToRight(View view) {
+        swipeLayout.addDrag(SwipeLayout.DragEdge.Left, view.findViewById(R.id.bottom_rl));
     }
 }

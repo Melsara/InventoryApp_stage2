@@ -16,11 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="eu.escapeadvisor.bookshelf"
             android:name=".data.BookProvider"
-            android:exported="false"
-            />
+            android:authorities="eu.escapeadvisor.bookshelf"
+            android:exported="false" />
+
+        <activity android:name=".EditorActivity"></activity>
     </application>
 
 </manifest>
