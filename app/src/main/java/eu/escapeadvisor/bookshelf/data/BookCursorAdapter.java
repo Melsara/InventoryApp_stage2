@@ -1,6 +1,7 @@
 package eu.escapeadvisor.bookshelf.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.CursorSwipeAdapter;
 
+import eu.escapeadvisor.bookshelf.EditorActivity;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import eu.escapeadvisor.bookshelf.R;
@@ -49,14 +51,10 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
         String productQuantity = cursor.getString(quantityColumnIndex);
         tvQuantity.setText(productQuantity);
 
+        //setting swipe actions on the list items
         swipeLayout =  view.findViewById(R.id.swipe);
         swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
         addSwipeLeftToRight(view);
-
-        ImageView edit = view.findViewById(R.id.pencil);
-        edit.setImageResource(R.drawable.baseline_edit_white_18);
-        ImageView delete = view.findViewById(R.id.trash);
-        delete.setImageResource(R.drawable.baseline_delete_white_18);
 
         swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
             @Override
@@ -66,11 +64,11 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
 
             @Override
             public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                if(leftOffset > 0) {
-                    Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
+                //everything here is for checking which direction user swiped
+                if(leftOffset > 200) {
+                    swipedLeftToRight = true;
+                } else if (leftOffset == 0)
+                    swipedLeftToRight = false;
             }
 
             @Override
@@ -80,7 +78,20 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
 
             @Override
             public void onOpen(SwipeLayout layout) {
-
+                if (swipedLeftToRight) {
+                    //trigger delete action on the swiped item
+                Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
+                    Intent deleteIntent = new Intent(context, EditorActivity.class);
+                    deleteIntent.putExtra("Delete mode: expecting swipedLeftToRight to be true", swipedLeftToRight);
+                    context.startActivity(deleteIntent);
+                swipedLeftToRight = false;
+                return;
+                } else if (!swipedLeftToRight) {
+                    //trigger edit action on the swiped item
+                    Intent editIntent = new Intent(context, EditorActivity.class);
+                    editIntent.putExtra("Edit mode: expecting swipedLeftToRight to be false", swipedLeftToRight);
+                    context.startActivity(editIntent);
+                }
             }
 
             @Override
