@@ -32,6 +32,7 @@
                 android:text="@string/label_supplierName" />
 
             <EditText
+                android:id="@+id/et_supplierName"
                 style="@style/EditText"
                 android:hint="@string/label_editext_supplierName" />
         </LinearLayout>
@@ -48,12 +49,14 @@
                 android:text="@string/label_supplierPhoneNumber" />
 
             <EditText
+                android:id="@+id/et_supplierPhoneNumber"
                 style="@style/EditText"
                 android:hint="@string/label_editext_supplierPhoneNumber"
                 android:inputType="phone"/>
         </LinearLayout>
 
             <Button
+                android:id="@+id/button_order"
                 style="@style/Buttons"
                 android:layout_below="@id/supplier_phone_number"
                 android:layout_margin="@dimen/activity_margin"

@@ -1,8 +1,10 @@
 package eu.escapeadvisor.bookshelf;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,10 +22,16 @@ import com.daimajia.swipe.SwipeLayout;
 import eu.escapeadvisor.bookshelf.data.BookCursorAdapter;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
+import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
+import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_SWIPE_DIR;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private BookCursorAdapter bookCursorAdapter;
     private static final int BOOK_LOADER = 0;
+    private Boolean swipedLeftToRight;
+    private Boolean fabClicked;
+    private long productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +42,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertRandomBook();
+                swipedLeftToRight = false;
+                fabClicked = true;
+                Intent addProduct = new Intent(MainActivity.this, EditorActivity.class);
+                Bundle extras = new Bundle();
+                extras.putBoolean(KEY_SWIPE_DIR, swipedLeftToRight);
+                extras.putBoolean(KEY_FAB_CLICKED, fabClicked);
+                addProduct.putExtras(extras);
+                startActivity(addProduct);
             }
         });
 
@@ -42,13 +58,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listView.setEmptyView(emptyView);
         bookCursorAdapter = new BookCursorAdapter(this, null);
         listView.setAdapter(bookCursorAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                swipedLeftToRight = false;
+                fabClicked = false;
+                Intent seeProductDetails = new Intent(MainActivity.this, EditorActivity.class);
+                Bundle extras = new Bundle();
+                extras.putBoolean(KEY_SWIPE_DIR, swipedLeftToRight);
+                extras.putBoolean(KEY_FAB_CLICKED, fabClicked);
+                seeProductDetails.putExtras(extras);
+                Uri currentProductUri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
+                seeProductDetails.setData(currentProductUri);
+                startActivity(seeProductDetails);
+                productId = id;
+            }
+        });
 
         getLoaderManager().initLoader(BOOK_LOADER, null, this);
     }
 
 
 
-    public void insertRandomBook() {
+/*    public void insertRandomBook() {
         ContentValues values = new ContentValues();
         values.put(BookshelfEntry.COLUMN_PROD_PRODUCTNAME, getString(R.string.dummy_productname));
         values.put(BookshelfEntry.COLUMN_PROD_ISBOOK, BookshelfEntry.ISBOOK_YES);
@@ -61,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
        Uri insertUri = getContentResolver().insert(BookshelfEntry.CONTENT_URI_PRODUCTS, values);
 
-    }
+    }*/
 
 
     @Override

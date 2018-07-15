@@ -28,12 +28,13 @@
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/trash"
             android:scaleType="centerInside"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:background="@color/colorPrimary"
             android:src="@drawable/baseline_delete_white_36" />
     </LinearLayout>
 

@@ -7,6 +7,9 @@
     <string name="dummy_supplierPhoneNumber">00 00 00 00</string>
     <string name="insert_success">Saved with id:  </string>
     <string name="insert_failure">Error in saving</string>
+    <string name="insert_success_user">Product saved</string>
+    <string name="update_failure">Error in updating</string>
+    <string name="update_success">Product updated</string>
     <string name="not_a_book">Not a book</string>
     <string name="is_a_book">Is a book</string>
     <string name="empty_view_subtitle_text">Try to add new products clicking on the button or adding dummy data.</string>
@@ -29,4 +32,6 @@
     <string name="label_editext_supplierPhoneNumber">Insert supplier phone number</string>
     <string name="label_productName">Product Name:</string>
     <string name="label_editText_productName">Insert product name</string>
+    <string name="editor_activity_title_new_product">Add new product</string>
+    <string name="editor_activity_title_edit_product">Edit product</string>
 </resources>

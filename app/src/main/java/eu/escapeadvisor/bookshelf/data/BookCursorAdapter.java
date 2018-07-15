@@ -1,11 +1,17 @@
 package eu.escapeadvisor.bookshelf.data;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +22,16 @@ import eu.escapeadvisor.bookshelf.EditorActivity;
 import eu.escapeadvisor.bookshelf.R;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
+import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
+import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_SWIPE_DIR;
+
 public class BookCursorAdapter extends CursorSwipeAdapter {
 
     private SwipeLayout swipeLayout;
-    private boolean swipedLeftToRight = false;
+    private boolean swipedLeftToRight;
+    private Boolean fabClicked;
+    Bundle extras;
+    ImageButton deleteItem;
 
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -31,7 +43,7 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(final View view, final Context context, final Cursor cursor) {
 
         TextView tvName = view.findViewById(R.id.name);
         int productNameColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
@@ -62,7 +74,9 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
             @Override
             public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                 //everything here is for checking which direction user swiped
+                fabClicked = false;
                 if (leftOffset > 200) {
+                    deleteItem = view.findViewById(R.id.trash);
                     swipedLeftToRight = true;
                 } else if (leftOffset == 0)
                     swipedLeftToRight = false;
@@ -76,13 +90,27 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
             @Override
             public void onOpen(SwipeLayout layout) {
                 if (swipedLeftToRight) {
+
+                    deleteItem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            long position = cursor.getPosition();
+                            Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
+                            Intent deleteIntent = new Intent(context, EditorActivity.class);
+                            extras = new Bundle();
+                            extras.putBoolean(KEY_SWIPE_DIR, swipedLeftToRight);
+                            extras.putBoolean(KEY_FAB_CLICKED, fabClicked);
+                            deleteIntent.putExtras(extras);
+                            Uri currentProductUri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, position);
+                            deleteIntent.setData(currentProductUri);
+                            context.startActivity(deleteIntent);
+                            swipedLeftToRight = false;
+                            position = 0;
+                            return;
+                        }
+                    });
                     //trigger delete action on the swiped item
-                    Toast.makeText(context, "swiped left to right", Toast.LENGTH_SHORT).show();
-                    Intent deleteIntent = new Intent(context, EditorActivity.class);
-                    deleteIntent.putExtra("Delete mode: expecting swipedLeftToRight to be true", swipedLeftToRight);
-                    context.startActivity(deleteIntent);
-                    swipedLeftToRight = false;
-                    return;
+
                 } else if (!swipedLeftToRight) {
                     //trigger edit action on the swiped item
                     Toast.makeText(context, "swiped right to left", Toast.LENGTH_SHORT).show();
@@ -118,4 +146,5 @@ public class BookCursorAdapter extends CursorSwipeAdapter {
     private void addSwipeLeftToRight(View view) {
         swipeLayout.addDrag(SwipeLayout.DragEdge.Left, view.findViewById(R.id.bottom_rl));
     }
+
 }

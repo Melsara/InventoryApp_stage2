@@ -32,6 +32,7 @@
                 android:text="@string/label_productName" />
 
             <EditText
+                android:id="@+id/et_productName"
                 style="@style/EditText"
                 android:hint="@string/label_editText_productName" />
         </LinearLayout>
@@ -48,8 +49,10 @@
                 android:text="@string/label_price" />
 
             <EditText
+                android:id="@+id/et_price"
                 style="@style/EditText"
-                android:hint="@string/label_editText_price" />
+                android:hint="@string/label_editText_price"
+                android:inputType="numberDecimal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -64,6 +67,7 @@
                 android:text="@string/label_quantity" />
 
             <EditText
+                android:id="@+id/et_quantity"
                 style="@style/EditText"
                 android:hint="@string/label_editText_quantity"
                 android:inputType="number"/>
@@ -77,6 +81,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button_increase_quantity"
                 style="@style/Buttons"
                 android:layout_margin="@dimen/activity_margin"
                 android:layout_width="@dimen/editor_buttons"
@@ -85,6 +90,7 @@
                 android:text="@string/button_increase_quantity" />
 
             <Button
+                android:id="@+id/button_decrease_quantity"
                 style="@style/Buttons"
                 android:layout_margin="@dimen/activity_margin"
                 android:layout_width="@dimen/editor_buttons"

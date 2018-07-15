@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 public class BookProvider extends ContentProvider {
@@ -96,9 +97,11 @@ public class BookProvider extends ContentProvider {
         }
 
         Integer insert_isBook = values.getAsInteger(BookshelfEntry.COLUMN_PROD_ISBOOK);
-        if (insert_isBook == null || !isValidItem(insert_isBook)) {
+
+        /*        Will add this validation later. For the moment there is no UI for isBook.
+           if (insert_isBook == null || !isValidItem(insert_isBook)) {
             throw new IllegalArgumentException("Products table requires a gender");
-        }
+        }*/
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long id = db.insert(BookshelfEntry.TABLE_NAME, null, values);
