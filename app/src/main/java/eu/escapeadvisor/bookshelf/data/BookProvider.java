@@ -126,15 +126,78 @@ public class BookProvider extends ContentProvider {
         return 0;
     }
 
-    @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
-    }
-
     public static boolean isValidItem(int isBook) {
         if (isBook == BookshelfEntry.ISBOOK_NO || isBook == BookshelfEntry.ISBOOK_YES) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues contentValues, String selection,
+                      String[] selectionArgs) {
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return updateProduct(uri, contentValues, selection, selectionArgs);
+            case PRODUCT_ID:
+                selection = BookshelfEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateProduct(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        //Checking data before updating
+
+        if (values.containsKey(BookshelfEntry.COLUMN_PROD_PRODUCTNAME)) {
+            String insert_name = values.getAsString(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
+            if (insert_name == null) {
+                throw new IllegalArgumentException("Products table requires a name");
+            }
+
+
+            if (values.containsKey(BookshelfEntry.COLUMN_PROD_QUANTITY)) {
+                Integer insert_quantity = values.getAsInteger(BookshelfEntry.COLUMN_PROD_QUANTITY);
+                if (insert_quantity < 0 && insert_quantity != null) {
+                    throw new IllegalArgumentException("Products table requires a quantity equal or higher than 0");
+                }
+            }
+            if (values.containsKey(BookshelfEntry.COLUMN_PROD_PRICE)) {
+                Float insert_price = values.getAsFloat(BookshelfEntry.COLUMN_PROD_PRICE);
+                if (insert_price < 0 && insert_price != null) {
+                    throw new IllegalArgumentException("Products table requires a price equal or higher than 0");
+                }
+            }
+
+            if (values.containsKey(BookshelfEntry.COLUMN_PROD_SUPPLIERNAME)) {
+                String insert_supplierName = values.getAsString(BookshelfEntry.COLUMN_PROD_SUPPLIERNAME);
+                if (insert_supplierName == null) {
+                    throw new IllegalArgumentException("Products table requires a supplier name");
+                }
+            }
+
+            if (values.containsKey(BookshelfEntry.COLUMN_PROD_SUPPLIERPHONENUMBER)) {
+                String insert_supplierPhoneNumber = values.getAsString(BookshelfEntry.COLUMN_PROD_SUPPLIERPHONENUMBER);
+                if (insert_supplierPhoneNumber == null) {
+                    throw new IllegalArgumentException("Products table requires a supplier phone number");
+                }
+            }
+
+        }
+
+
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        int rowsUpdated = db.update(BookshelfEntry.TABLE_NAME, values, selection, selectionArgs);
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }

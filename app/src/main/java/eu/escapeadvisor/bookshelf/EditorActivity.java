@@ -26,7 +26,7 @@ import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     BookCursorAdapter bookCursorAdapter;
-    private static final int BOOK_LOADER = 1;
+    private static final int BOOK_LOADER = 0;
     int mRowsUpdated;
     int mRowsDeleted;
     private Uri mCurrentProductUri;

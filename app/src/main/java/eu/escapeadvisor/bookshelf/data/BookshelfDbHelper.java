@@ -7,13 +7,13 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 public class BookshelfDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Bookshelf.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String SQL_CREATE_PROD_TABLE =
             "CREATE TABLE " + BookshelfEntry.TABLE_NAME + " (" +
                     BookshelfEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     BookshelfEntry.COLUMN_PROD_PRODUCTNAME + " TEXT NOT NULL, " +
-                    BookshelfEntry.COLUMN_PROD_ISBOOK + " INTEGER NOT NULL DEFAULT 0, " +
+                    BookshelfEntry.COLUMN_PROD_ISBOOK + " INTEGER DEFAULT 0, " +
                     BookshelfEntry.COLUMN_PROD_TITLE + " TEXT, " +
                     BookshelfEntry.COLUMN_PROD_AUTHOR + " TEXT, " +
                     BookshelfEntry.COLUMN_PROD_PRICE + " REAL default 0, " +
