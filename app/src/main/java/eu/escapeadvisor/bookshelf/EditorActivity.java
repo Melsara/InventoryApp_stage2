@@ -20,8 +20,8 @@ import android.widget.Toast;
 import eu.escapeadvisor.bookshelf.data.BookCursorAdapter;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
+import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_EDIT_CLICKED;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
-import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_SWIPE_DIR;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -56,7 +56,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_editor);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        deleteMode = extras.getBoolean(KEY_SWIPE_DIR);
+        deleteMode = extras.getBoolean(KEY_EDIT_CLICKED);
         insertMode = extras.getBoolean(KEY_FAB_CLICKED);
         mCurrentProductUri = intent.getData();
 

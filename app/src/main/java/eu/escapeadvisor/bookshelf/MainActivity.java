@@ -3,8 +3,8 @@ package eu.escapeadvisor.bookshelf;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,84 +14,84 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.daimajia.swipe.SwipeLayout;
 
 import eu.escapeadvisor.bookshelf.data.BookCursorAdapter;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
-import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
-import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_SWIPE_DIR;
+import static eu.escapeadvisor.bookshelf.GlobalConstant.QUANTITY_SALE;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private BookCursorAdapter bookCursorAdapter;
     private static final int BOOK_LOADER = 0;
-    private Boolean swipedLeftToRight;
-    private Boolean fabClicked;
+    private Boolean editClicked = false;
+    private Boolean fabClicked = false;
+    private FloatingActionButton fab;
+    private ListView listView;
+    private View emptyView;
+    private Button saleButton;
+    private Button editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setActivityComponent();
 
-        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                swipedLeftToRight = false;
-                fabClicked = true;
-                Intent addProduct = new Intent(MainActivity.this, EditorActivity.class);
-                Bundle extras = new Bundle();
-                extras.putBoolean(KEY_SWIPE_DIR, swipedLeftToRight);
-                extras.putBoolean(KEY_FAB_CLICKED, fabClicked);
-                addProduct.putExtras(extras);
-                startActivity(addProduct);
-            }
-        });
-
-        final ListView listView = (ListView) findViewById(R.id.list_view_books);
-        View emptyView = findViewById(R.id.empty_view);
-        listView.setEmptyView(emptyView);
+        /*setting OnClickListeners on the buttons in the UI*/
         bookCursorAdapter = new BookCursorAdapter(this, null);
         listView.setAdapter(bookCursorAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                swipedLeftToRight = false;
+                editClicked = false;
                 fabClicked = false;
-                Intent seeProductDetails = new Intent(MainActivity.this, EditorActivity.class);
-                Bundle extras = new Bundle();
-                extras.putBoolean(KEY_SWIPE_DIR, swipedLeftToRight);
-                extras.putBoolean(KEY_FAB_CLICKED, fabClicked);
-                seeProductDetails.putExtras(extras);
-                Uri currentProductUri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
-                seeProductDetails.setData(currentProductUri);
-                startActivity(seeProductDetails);
+                HelperClass.createIntentWIthId(MainActivity.this, editClicked, fabClicked, id);
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabClicked = true;
+                HelperClass.createIntent(MainActivity.this, editClicked, fabClicked);
             }
         });
 
         getLoaderManager().initLoader(BOOK_LOADER, null, this);
+
     }
 
+    public void decreaseQuantity(int id, int quantity, Context context){
 
+        if (quantity == 0){
+            Toast.makeText(this, getString(R.string.toast_quantity_zero), Toast.LENGTH_SHORT).show();
 
-/*    public void insertRandomBook() {
-        ContentValues values = new ContentValues();
-        values.put(BookshelfEntry.COLUMN_PROD_PRODUCTNAME, getString(R.string.dummy_productname));
-        values.put(BookshelfEntry.COLUMN_PROD_ISBOOK, BookshelfEntry.ISBOOK_YES);
-        values.put(BookshelfEntry.COLUMN_PROD_TITLE, getString(R.string.dummy_title));
-        values.put(BookshelfEntry.COLUMN_PROD_AUTHOR, getString(R.string.dummy_author));
-        values.put(BookshelfEntry.COLUMN_PROD_PRICE, "9.99");
-        values.put(BookshelfEntry.COLUMN_PROD_QUANTITY, "9999");
-        values.put(BookshelfEntry.COLUMN_PROD_SUPPLIERNAME, getString(R.string.dummy_supplierName));
-        values.put(BookshelfEntry.COLUMN_PROD_SUPPLIERPHONENUMBER, getString(R.string.dummy_supplierPhoneNumber));
+        } else if (quantity > 0) {
 
-       Uri insertUri = getContentResolver().insert(BookshelfEntry.CONTENT_URI_PRODUCTS, values);
+            quantity = quantity + QUANTITY_SALE;
+            ContentValues values = new ContentValues();
+            values.put(BookshelfEntry.COLUMN_PROD_QUANTITY, quantity);
 
-    }*/
+            Uri uri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
+            int rowsUpdated = context.getContentResolver().update(uri, values, null, null);
+
+            if (rowsUpdated==0){
+
+                Toast.makeText(this, getString(R.string.toast_update_failed), Toast.LENGTH_SHORT).show();
+
+            }else {
+
+                Toast.makeText(this, getString(R.string.toast_update_success), Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+    }
 
 
     @Override
@@ -128,7 +128,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setActivityComponent() {
+        fab = findViewById(R.id.floatingActionButton);
+        saleButton = findViewById(R.id.button_sale);
+        editButton = findViewById(R.id.button_edit);
+        listView = findViewById(R.id.list_view_books);
+        emptyView = findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
 
     }
+
 }
 

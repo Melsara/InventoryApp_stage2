@@ -7,7 +7,7 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 public class BookshelfDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Bookshelf.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String SQL_CREATE_PROD_TABLE =
             "CREATE TABLE " + BookshelfEntry.TABLE_NAME + " (" +

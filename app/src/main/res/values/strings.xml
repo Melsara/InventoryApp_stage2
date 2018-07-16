@@ -35,4 +35,7 @@
     <string name="label_editText_productName">Insert product name</string>
     <string name="editor_activity_title_new_product">Add new product</string>
     <string name="editor_activity_title_edit_product">Edit product</string>
+    <string name="toast_quantity_zero">There are no more products of this kind./n Please order it back.</string>
+    <string name="toast_update_failed">Error in sale</string>
+    <string name="toast_update_success">Sale successful</string>
 </resources>

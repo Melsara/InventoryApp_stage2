@@ -1,37 +1,33 @@
 package eu.escapeadvisor.bookshelf.data;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import eu.escapeadvisor.bookshelf.EditorActivity;
+import eu.escapeadvisor.bookshelf.MainActivity;
 import eu.escapeadvisor.bookshelf.R;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
-import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
-import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_SWIPE_DIR;
+import static eu.escapeadvisor.bookshelf.GlobalConstant.QUANTITY_SALE;
 
 public class BookCursorAdapter extends CursorAdapter {
-
-    private boolean swipedLeftToRight;
-    private Boolean fabClicked;
-    Bundle extras;
-    ImageButton deleteItem;
 
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
+    private TextView tvQuantity;
+    private static final String TAG = BookCursorAdapter.class.getName();
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
@@ -40,6 +36,9 @@ public class BookCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
+
+        int idColumnIndex = cursor.getColumnIndex(BookshelfEntry._ID);
+        final String productId= cursor.getString(idColumnIndex);
 
         TextView tvName = view.findViewById(R.id.name);
         int productNameColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
@@ -51,10 +50,20 @@ public class BookCursorAdapter extends CursorAdapter {
         String productPrice = cursor.getString(priceColumnIndex);
         tvPrice.setText(productPrice);
 
-        TextView tvQuantity = view.findViewById(R.id.quantity);
+        tvQuantity = view.findViewById(R.id.quantity);
         int quantityColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_QUANTITY);
-        String productQuantity = cursor.getString(quantityColumnIndex);
+        final String productQuantity = cursor.getString(quantityColumnIndex);
         tvQuantity.setText(productQuantity);
+
+        Button saleButton = view.findViewById(R.id.button_sale);
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.decreaseQuantity(Integer.valueOf(productId), Integer.valueOf(productQuantity), context);
+            }
+        });
     }
 
 }
+
