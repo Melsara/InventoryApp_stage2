@@ -20,6 +20,7 @@
     <string name="button_increase_quantity">+</string>
     <string name="button_decrease_quantity">-</string>
     <string name="button_order">Order</string>
+    <string name="button_edit"><u>Edit</u></string>
     <string name="label_price">Price:</string>
     <string name="label_editText_price">Insert price</string>
     <string name="label_quantity">Quantity left:</string>

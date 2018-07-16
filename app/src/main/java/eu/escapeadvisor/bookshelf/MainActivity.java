@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int BOOK_LOADER = 0;
     private Boolean swipedLeftToRight;
     private Boolean fabClicked;
-    private long productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        ListView listView = (ListView) findViewById(R.id.list_view_books);
+        final ListView listView = (ListView) findViewById(R.id.list_view_books);
         View emptyView = findViewById(R.id.empty_view);
         listView.setEmptyView(emptyView);
         bookCursorAdapter = new BookCursorAdapter(this, null);
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Uri currentProductUri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
                 seeProductDetails.setData(currentProductUri);
                 startActivity(seeProductDetails);
-                productId = id;
             }
         });
 
@@ -128,4 +126,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
         bookCursorAdapter.swapCursor(null);
     }
+
+    private void setActivityComponent() {
+
+    }
 }
+
