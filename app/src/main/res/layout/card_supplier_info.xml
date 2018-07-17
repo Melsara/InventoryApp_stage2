@@ -42,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/supplier_name"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/tv_margin">
 
             <TextView
                 style="@style/LabelEditText"
@@ -59,7 +60,7 @@
                 android:id="@+id/button_order"
                 style="@style/Buttons"
                 android:layout_below="@id/supplier_phone_number"
-                android:layout_margin="@dimen/activity_margin"
+                android:layout_margin="@dimen/tv_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

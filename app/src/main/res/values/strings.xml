@@ -12,7 +12,14 @@
     <string name="update_success">Product updated</string>
     <string name="not_a_book">Not a book</string>
     <string name="is_a_book">Is a book</string>
-    <string name="empty_view_subtitle_text">Try to add new products clicking on the button or adding dummy data.</string>
+    <string name="empty_view_subtitle_text">Try to add new products clicking on the + button below.\n
+        You will be asked:\n
+        - product name\n
+        - product quantity in the shelves\n
+        - product price\n
+        - supplier name\n
+        - supplier phone number.\n
+        All fields are mandatory.</string>
     <string name="empty_view_title_text">A bit lonely, here...</string>
     <string name="button_sale">Sale</string>
     <string name="button_save_item">Save item</string>
