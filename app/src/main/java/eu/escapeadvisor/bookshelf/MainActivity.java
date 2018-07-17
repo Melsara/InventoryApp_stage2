@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private BookCursorAdapter bookCursorAdapter;
     private static final int BOOK_LOADER = 0;
-    private Boolean editClicked = false;
-    private Boolean fabClicked = false;
+    private Boolean editClicked;
+    private Boolean fabClicked;
     private FloatingActionButton fab;
     private ListView listView;
     private View emptyView;

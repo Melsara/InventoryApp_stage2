@@ -22,6 +22,8 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_EDIT_CLICKED;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
+import static eu.escapeadvisor.bookshelf.HelperClass.disableButton;
+import static eu.escapeadvisor.bookshelf.HelperClass.disableEditText;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -30,7 +32,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     int mRowsUpdated;
     int mRowsDeleted;
     private Uri mCurrentProductUri;
-    private Boolean deleteMode;
+    private Boolean editMode;
     private Boolean insertMode;
 
     private EditText mEtProductName;
@@ -56,7 +58,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_editor);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        deleteMode = extras.getBoolean(KEY_EDIT_CLICKED);
+        editMode = extras.getBoolean(KEY_EDIT_CLICKED);
         insertMode = extras.getBoolean(KEY_FAB_CLICKED);
         mCurrentProductUri = intent.getData();
 
@@ -73,10 +75,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_product));
             invalidateOptionsMenu();
-            mIncreaseQuantity.setVisibility(View.GONE);
-            mDecreaseQuantity.setVisibility(View.GONE);
-            mDeleteProduct.setVisibility(View.GONE);
-            mOrder.setVisibility(View.GONE);
+            disableButton(mIncreaseQuantity);
+            disableButton(mDecreaseQuantity);
+            disableButton(mDeleteProduct);
+            disableButton(mOrder);
             mSaveProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -84,8 +86,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
 
-        } else {
+        } else if (!editMode && !insertMode) {
             setTitle(getString(R.string.editor_activity_title_edit_product));
+            disableEditText(mEtProductName);
+            disableEditText(mEtPrice);
+            disableEditText(mEtQuantity);
+            disableEditText(mEtSupplierName);
+            disableEditText(mEtSupplierPhoneNumber);
+            disableButton(mIncreaseQuantity);
+            disableButton(mDecreaseQuantity);
+            disableButton(mOrder);
+            disableButton(mDeleteProduct);
+            disableButton(mSaveProduct);
+
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
         }
 
@@ -207,7 +220,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         values.put(BookshelfEntry.COLUMN_PROD_QUANTITY, quantityInt);
 
-        if (!TextUtils.isEmpty(priceString)){
+        if (!TextUtils.isEmpty(priceString)) {
             priceFloat = Float.parseFloat(priceString);
         }
 

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import eu.escapeadvisor.bookshelf.data.BookshelfContract;
 
@@ -33,5 +36,14 @@ public class HelperClass {
         intent.putExtras(bundle);
         context.startActivity(intent);
 
+    }
+
+    public static void disableEditText (EditText editText){
+        editText.setEnabled(false);
+        editText.setClickable(false);
+    }
+
+    public static void disableButton (Button button) {
+        button.setVisibility(View.GONE);
     }
 }
