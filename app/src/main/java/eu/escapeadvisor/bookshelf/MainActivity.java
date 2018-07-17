@@ -22,6 +22,8 @@ import eu.escapeadvisor.bookshelf.data.BookCursorAdapter;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import static eu.escapeadvisor.bookshelf.GlobalConstant.QUANTITY_SALE;
+import static eu.escapeadvisor.bookshelf.HelperClass.createIntent;
+import static eu.escapeadvisor.bookshelf.HelperClass.createIntentWIthId;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         setActivityComponent();
 
-        /*setting OnClickListeners on the buttons in the UI*/
+        /*setting OnClickListeners on the items in the UI*/
         bookCursorAdapter = new BookCursorAdapter(this, null);
         listView.setAdapter(bookCursorAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 editClicked = false;
                 fabClicked = false;
-                HelperClass.createIntentWIthId(MainActivity.this, editClicked, fabClicked, id);
+                createIntentWIthId(MainActivity.this, editClicked, fabClicked, id);
             }
         });
 
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onClick(View view) {
                 fabClicked = true;
-                HelperClass.createIntent(MainActivity.this, editClicked, fabClicked);
+                editClicked = false;
+                createIntent(MainActivity.this, editClicked, fabClicked);
             }
         });
 
@@ -65,10 +68,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public void decreaseQuantity(int id, int quantity, Context context){
+    public void decreaseQuantity(int id, int quantity){
 
         if (quantity == 0){
-            Toast.makeText(this, getString(R.string.toast_quantity_zero), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_quantity_zero), Toast.LENGTH_LONG).show();
 
         } else if (quantity > 0) {
 
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             values.put(BookshelfEntry.COLUMN_PROD_QUANTITY, quantity);
 
             Uri uri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
-            int rowsUpdated = context.getContentResolver().update(uri, values, null, null);
+            int rowsUpdated = getContentResolver().update(uri, values, null, null);
 
             if (rowsUpdated==0){
 
@@ -91,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
 
+    }
+
+    public void editItem (int id){
+        editClicked = true;
+        fabClicked = false;
+        createIntentWIthId(MainActivity.this, editClicked, fabClicked, id);
     }
 
 

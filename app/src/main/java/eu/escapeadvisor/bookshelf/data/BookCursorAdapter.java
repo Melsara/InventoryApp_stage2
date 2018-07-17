@@ -60,7 +60,16 @@ public class BookCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View view) {
                 MainActivity mainActivity = (MainActivity) context;
-                mainActivity.decreaseQuantity(Integer.valueOf(productId), Integer.valueOf(productQuantity), context);
+                mainActivity.decreaseQuantity(Integer.valueOf(productId), Integer.valueOf(productQuantity));
+            }
+        });
+
+        Button editButton = view.findViewById(R.id.button_edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.editItem(Integer.valueOf(productId));
             }
         });
     }

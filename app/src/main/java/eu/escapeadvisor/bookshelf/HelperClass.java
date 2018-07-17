@@ -46,4 +46,9 @@ public class HelperClass {
     public static void disableButton (Button button) {
         button.setVisibility(View.GONE);
     }
+
+    public static String helperGetText (EditText editText) {
+        String text = editText.getText().toString().trim();
+        return text;
+    }
 }

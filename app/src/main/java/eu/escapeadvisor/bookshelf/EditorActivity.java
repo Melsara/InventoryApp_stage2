@@ -24,6 +24,7 @@ import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_EDIT_CLICKED;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableButton;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableEditText;
+import static eu.escapeadvisor.bookshelf.HelperClass.helperGetText;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -64,14 +65,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         setActivityComponent();
 
-        /*@TODO: if it is not a new product, manage 3 cases:
-        1. deleteMode is null - user clicked on the item - see details (all fields disabled, save button)
-        2. deleteMode is true - user swiped from L to R - delete item (all fields disabled, delete button)
-        3. deleteMode is false - user swiped form R to L - edit item (all field enables, save button)*/
+        /*Manage 3 cases:
+        1. (EditorActivity) insertMode is true and editMode is false, plus mCurrentProductUri is null - user clicked on fab button - insert new product (all fields enabled and empty, save button)
+        2. (EditorActivity) insertMode is false and editMode is false - user clicked on the item - see details (all fields disabled and pre-filled, no buttons)
+        3. (EditorActivity) insertMode is false and editMode is true - user clicked on edit button - edit product (all fields enabled and pre-filled, buttons increaseQuantity, decreaseQuantity, order, save, delete)
+         */
 
-        // Find all relevant views that we will need to read user input from
-
-
+            //1. insertMode is true and editMode is false, plus mCurrentProductUri is null - user clicked on fab button - insert new product (all fields enabled and empty, save button)
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_product));
             invalidateOptionsMenu();
@@ -86,7 +86,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
 
-        } else if (!editMode && !insertMode) {
+            //2. insertMode is false and editMode is false - user clicked on the item - see details (all fields disabled and pre-filled, no buttons)
+        } else if (!insertMode && !editMode) {
             setTitle(getString(R.string.editor_activity_title_edit_product));
             disableEditText(mEtProductName);
             disableEditText(mEtPrice);
@@ -100,7 +101,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             disableButton(mSaveProduct);
 
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
+
+            //3. (EditorActivity) insertMode is false and editMode is true - user clicked on edit button - edit product (all fields enabled and pre-filled, buttons increaseQuantity, decreaseQuantity, order, save, delete)
+        } else if (!insertMode && editMode){
+            getLoaderManager().initLoader(BOOK_LOADER, null, this);
+            mSaveProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveProduct();
+                }
+            });
         }
+
 
 
     }
@@ -193,11 +205,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void saveProduct() {
-        String productNameString = mEtProductName.getText().toString().trim();
-        String priceString = mEtPrice.getText().toString().trim();
-        String quantityString = mEtQuantity.getText().toString().trim();
-        String supplierNameString = mEtSupplierName.getText().toString().trim();
-        String supplierPhoneNumberString = mEtSupplierPhoneNumber.getText().toString().trim();
+        String productNameString = helperGetText(mEtProductName);
+        String priceString = helperGetText(mEtPrice);
+        String quantityString = helperGetText(mEtQuantity);
+        String supplierNameString = helperGetText(mEtSupplierName);
+        String supplierPhoneNumberString = helperGetText(mEtSupplierPhoneNumber);
         float priceFloat = 0;
         int quantityInt = 0;
         if (mCurrentProductUri == null &&
