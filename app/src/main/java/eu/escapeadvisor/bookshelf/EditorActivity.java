@@ -1,8 +1,10 @@
 package eu.escapeadvisor.bookshelf;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -64,6 +66,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentProductUri = intent.getData();
 
         setActivityComponent();
+
+        mDeleteProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteConfirmationDialog();
+            }
+        });
 
         /*Manage 3 cases:
         1. (EditorActivity) insertMode is true and editMode is false, plus mCurrentProductUri is null - user clicked on fab button - insert new product (all fields enabled and empty, save button)
@@ -267,4 +276,47 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
     }
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deletePet();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Perform the deletion of the pet in the database.
+     */
+    private void deletePet() {
+        if (mCurrentProductUri != null) {
+            mRowsDeleted = getContentResolver().delete(mCurrentProductUri,
+                    null,
+                    null);
+        }
+
+        if (mRowsDeleted == 0) {
+            editorToast.makeText(this, getString(R.string.delete_product_failed), toastDuration).show();
+        } else {
+            editorToast.makeText(this, getString(R.string.delete_product_success), toastDuration).show();
+        }
+
+        finish();
+
+    }
+
 }

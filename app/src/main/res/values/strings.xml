@@ -24,6 +24,12 @@
     <string name="button_sale">Sale</string>
     <string name="button_save_item">Save item</string>
     <string name="button_delete_item">Delete item</string>
+    <string name="delete_dialog_msg">Delete this product?</string>
+    <string name="delete_all_dialog_msg">Delete all products?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_product_failed">Error in deleting</string>
+    <string name="delete_product_success">Product deleted</string>
     <string name="button_increase_quantity">+</string>
     <string name="button_decrease_quantity">-</string>
     <string name="button_order">Order</string>
