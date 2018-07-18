@@ -24,6 +24,7 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_EDIT_CLICKED;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
+import static eu.escapeadvisor.bookshelf.HelperClass.checkIfEmpty;
 import static eu.escapeadvisor.bookshelf.HelperClass.decreaseQuantity;
 import static eu.escapeadvisor.bookshelf.HelperClass.dialPhoneNumber;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableButton;
@@ -108,7 +109,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         3. (EditorActivity) insertMode is false and editMode is true - user clicked on edit button - edit product (all fields enabled and pre-filled, buttons increaseQuantity, decreaseQuantity, order, save, delete)
          */
 
-            //1. insertMode is true and editMode is false, plus mCurrentProductUri is null - user clicked on fab button - insert new product (all fields enabled and empty, save button)
+        //1. insertMode is true and editMode is false, plus mCurrentProductUri is null - user clicked on fab button - insert new product (all fields enabled and empty, save button)
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_product));
             invalidateOptionsMenu();
@@ -140,7 +141,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
 
             //3. (EditorActivity) insertMode is false and editMode is true - user clicked on edit button - edit product (all fields enabled and pre-filled, buttons increaseQuantity, decreaseQuantity, order, save, delete)
-        } else if (!insertMode && editMode){
+        } else if (!insertMode && editMode) {
             setTitle(R.string.editor_activity_title_edit_product);
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
             mSaveProduct.setOnClickListener(new View.OnClickListener() {
@@ -297,24 +298,46 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         values.put(BookshelfEntry.COLUMN_PROD_PRICE, priceFloat);
 
-        if (mCurrentProductUri == null) {
-            Uri insertUri = getContentResolver().insert(BookshelfEntry.CONTENT_URI_PRODUCTS, values);
+        boolean productNameIsEmpty = checkIfEmpty(mEtProductName, getString(R.string.editor_empty_productName), EditorActivity.this);
+        boolean priceIsEmpty = checkIfEmpty(mEtPrice, getString(R.string.editor_empty_price), EditorActivity.this);
+        boolean quantityIsEmpty = checkIfEmpty(mEtQuantity, getString(R.string.editor_empty_quantity), EditorActivity.this);
+        boolean supplierNameIsEmpty = checkIfEmpty(mEtSupplierName, getString(R.string.editor_empty_supplierName), EditorActivity.this);
+        boolean supplierPhoneIsEmpty = checkIfEmpty(mEtSupplierPhoneNumber, getString(R.string.editor_empty_supplierPhone), EditorActivity.this);
 
-            if (insertUri == null) {
-                editorToast.makeText(this, getString(R.string.insert_failure), toastDuration).show();
+        if (mCurrentProductUri == null) {
+            if (productNameIsEmpty || priceIsEmpty
+                    || quantityIsEmpty || supplierNameIsEmpty
+                    || supplierPhoneIsEmpty) {
+                return;
+
             } else {
-                editorToast.makeText(this, getString(R.string.insert_success_user), toastDuration).show();
-                finish();
+                Uri insertUri = getContentResolver().insert(BookshelfEntry.CONTENT_URI_PRODUCTS, values);
+
+                if (insertUri == null) {
+                    editorToast.makeText(this, getString(R.string.insert_failure), toastDuration).show();
+                } else {
+                    editorToast.makeText(this, getString(R.string.insert_success_user), toastDuration).show();
+                    finish();
+                }
             }
+
 
         } else {
 
-            mRowsUpdated = getContentResolver().update(
-                    mCurrentProductUri,
-                    values,
-                    null,
-                    null
-            );
+            if(productNameIsEmpty || priceIsEmpty
+                    || quantityIsEmpty || supplierNameIsEmpty
+                    || supplierPhoneIsEmpty) {
+                return;
+
+            } else {
+
+                mRowsUpdated = getContentResolver().update(
+                        mCurrentProductUri,
+                        values,
+                        null,
+                        null
+                );
+            }
 
             if (mRowsUpdated == 0) {
                 editorToast.makeText(this, getString(R.string.update_failure), toastDuration).show();
@@ -326,6 +349,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
     }
+
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.

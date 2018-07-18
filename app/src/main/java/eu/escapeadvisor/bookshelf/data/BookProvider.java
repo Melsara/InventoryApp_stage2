@@ -96,6 +96,11 @@ public class BookProvider extends ContentProvider {
             throw new IllegalArgumentException("Products table requires a name");
         }
 
+        String insert_productPrice = values.getAsString(BookshelfEntry.COLUMN_PROD_PRICE);
+        if (insert_productPrice.equals(null) || insert_productName.equals("")) {
+            throw new IllegalArgumentException("Products table requires a price");
+        }
+
         Integer insert_isBook = values.getAsInteger(BookshelfEntry.COLUMN_PROD_ISBOOK);
 
         /*        Will add this validation later. For the moment there is no UI for isBook.

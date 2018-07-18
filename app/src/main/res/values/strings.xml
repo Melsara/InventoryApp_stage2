@@ -52,9 +52,14 @@
     <string name="editor_activity_title_new_product">Add new product</string>
     <string name="editor_activity_title_edit_product">Edit product</string>
     <string name="editor_activity_title_details_product">See product details</string>
-    <string name="toast_quantity_zero">There are no more products of this kind.\n Please order it back clicking on Edit.</string>
+    <string name="toast_quantity_zero">There are no more products of this kind.\n Please order it back and update the quantity.</string>
     <string name="toast_update_failed">Error in sale</string>
     <string name="toast_update_success">Sale successful</string>
     <string name="editor_toast_decrease_success">Quantity decreased</string>
     <string name="editor_toast_increase_success">Quantity increased</string>
+    <string name="editor_empty_productName">Please insert a product name</string>
+    <string name="editor_empty_price">Please insert a price</string>
+    <string name="editor_empty_quantity">Please insert a quantity</string>
+    <string name="editor_empty_supplierName">Please insert a supplier name</string>
+    <string name="editor_empty_supplierPhone">Please insert a supplier phone number</string>
 </resources>

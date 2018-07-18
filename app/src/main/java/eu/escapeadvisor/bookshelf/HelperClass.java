@@ -110,4 +110,18 @@ public class HelperClass {
 
         }
     }
+
+    public static boolean checkIfEmpty (EditText editText, CharSequence stringResource, Context context){
+        boolean isEmpty = false;
+        String contentToCheck = helperGetText(editText);
+        if (contentToCheck.isEmpty() || contentToCheck.equals(null) || contentToCheck.equals("")){
+            Toast.makeText(context, stringResource, Toast.LENGTH_SHORT).show();
+            isEmpty = true;
+        }
+        return isEmpty;
+    }
+
+    public static void validateData (){
+
+    }
 }
