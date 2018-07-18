@@ -13,6 +13,8 @@ import android.util.Log;
 
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
+import static eu.escapeadvisor.bookshelf.HelperClass.validateData;
+
 public class BookProvider extends ContentProvider {
 
     private BookshelfDbHelper mDbHelper;
@@ -91,19 +93,14 @@ public class BookProvider extends ContentProvider {
 
     private Uri insertProduct(Uri uri, ContentValues values) {
         //Data validation
-        String insert_productName = values.getAsString(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
-        if (insert_productName.equals(null) || insert_productName.equals("")) {
-            throw new IllegalArgumentException("Products table requires a name");
-        }
-
-        String insert_productPrice = values.getAsString(BookshelfEntry.COLUMN_PROD_PRICE);
-        if (insert_productPrice.equals(null) || insert_productName.equals("")) {
-            throw new IllegalArgumentException("Products table requires a price");
-        }
-
-        Integer insert_isBook = values.getAsInteger(BookshelfEntry.COLUMN_PROD_ISBOOK);
+        validateData(values, BookshelfEntry.COLUMN_PROD_PRODUCTNAME, "Products table requires a name");
+        validateData(values, BookshelfEntry.COLUMN_PROD_PRICE, "Products table requires a price");
+        validateData(values, BookshelfEntry.COLUMN_PROD_QUANTITY, "Products table requires a quantity");
+        validateData(values, BookshelfEntry.COLUMN_PROD_SUPPLIERNAME, "Products table requires a supplier name");
+        validateData(values, BookshelfEntry.COLUMN_PROD_SUPPLIERPHONENUMBER, "Products table requires a supplier phone number");
 
         /*        Will add this validation later. For the moment there is no UI for isBook.
+         Integer insert_isBook = values.getAsInteger(BookshelfEntry.COLUMN_PROD_ISBOOK);
            if (insert_isBook == null || !isValidItem(insert_isBook)) {
             throw new IllegalArgumentException("Products table requires a gender");
         }*/
@@ -143,7 +140,7 @@ public class BookProvider extends ContentProvider {
             case PRODUCT_ID:
                 // Delete a single row given by the ID in the URI
                 selection = BookshelfEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(BookshelfEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:

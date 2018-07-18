@@ -121,7 +121,10 @@ public class HelperClass {
         return isEmpty;
     }
 
-    public static void validateData (){
-
+    public static void validateData (ContentValues values, String column, String error){
+        String string = values.getAsString(column);
+        if (string.equals(null) || string.equals("")) {
+            throw new IllegalArgumentException(error);
+        }
     }
 }
