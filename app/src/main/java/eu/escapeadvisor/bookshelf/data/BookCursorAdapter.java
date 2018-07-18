@@ -20,6 +20,7 @@ import eu.escapeadvisor.bookshelf.R;
 import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import static eu.escapeadvisor.bookshelf.GlobalConstant.QUANTITY_SALE;
+import static eu.escapeadvisor.bookshelf.HelperClass.decreaseQuantity;
 
 public class BookCursorAdapter extends CursorAdapter {
 
@@ -60,7 +61,7 @@ public class BookCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View view) {
                 MainActivity mainActivity = (MainActivity) context;
-                mainActivity.decreaseQuantity(Integer.valueOf(productId), Integer.valueOf(productQuantity));
+                decreaseQuantity(Integer.valueOf(productId), Integer.valueOf(productQuantity), context.getResources().getText(R.string.toast_update_success), context);
             }
         });
 

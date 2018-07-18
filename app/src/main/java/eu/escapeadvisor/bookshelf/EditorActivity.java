@@ -24,9 +24,12 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_EDIT_CLICKED;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.KEY_FAB_CLICKED;
+import static eu.escapeadvisor.bookshelf.HelperClass.decreaseQuantity;
+import static eu.escapeadvisor.bookshelf.HelperClass.dialPhoneNumber;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableButton;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableEditText;
 import static eu.escapeadvisor.bookshelf.HelperClass.helperGetText;
+import static eu.escapeadvisor.bookshelf.HelperClass.increaseQuantity;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -50,6 +53,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Button mDecreaseQuantity;
     private Button mOrder;
 
+    private String currentSupplierPhoneNumber;
+    private int currentQuantity;
+    private int currentId;
+
     private boolean mProductHasChanged = false;
 
     private Toast editorToast;
@@ -71,6 +78,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View view) {
                 showDeleteConfirmationDialog();
+            }
+        });
+
+        mOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialPhoneNumber(currentSupplierPhoneNumber, EditorActivity.this);
+            }
+        });
+
+        mDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decreaseQuantity(currentId, currentQuantity, getText(R.string.editor_toast_decrease_success), EditorActivity.this);
+            }
+        });
+
+        mIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                increaseQuantity(currentId, currentQuantity, getText(R.string.editor_toast_increase_success), EditorActivity.this);
             }
         });
 
@@ -121,9 +149,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
         }
-
-
-
     }
 
     @Override
@@ -153,17 +178,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         if (cursor.moveToFirst()) {
+            int productIdColumnIndex = cursor.getColumnIndex(BookshelfEntry._ID);
             int productNameColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRODUCTNAME);
             int priceColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_QUANTITY);
             int supplierNameColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_SUPPLIERNAME);
             int supplierPhoneNumberColumnIndex = cursor.getColumnIndex(BookshelfEntry.COLUMN_PROD_SUPPLIERPHONENUMBER);
 
+            currentId = cursor.getInt(productIdColumnIndex);
             String currentProductName = cursor.getString(productNameColumnIndex);
             Float currentPrice = cursor.getFloat(priceColumnIndex);
-            int currentQuantity = cursor.getInt(quantityColumnIndex);
+            currentQuantity = cursor.getInt(quantityColumnIndex);
             String currentSupplierName = cursor.getString(supplierNameColumnIndex);
-            String currentSupplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
+            currentSupplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
 
             mEtProductName.setText(currentProductName);
             mEtPrice.setText(Float.toString(currentPrice));
@@ -191,6 +218,28 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return false;
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        if (!mProductHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
 
     private void setActivityComponent() {
         mEtProductName = findViewById(R.id.et_productName);
@@ -278,7 +327,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the postivie and negative buttons on the dialog.
+        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -288,6 +337,28 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
