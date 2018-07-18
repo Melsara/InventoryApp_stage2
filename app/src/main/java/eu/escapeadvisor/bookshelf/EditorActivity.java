@@ -125,7 +125,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             //2. insertMode is false and editMode is false - user clicked on the item - see details (all fields disabled and pre-filled, no buttons)
         } else if (!insertMode && !editMode) {
-            setTitle(getString(R.string.editor_activity_title_edit_product));
+            setTitle(getString(R.string.editor_activity_title_details_product));
             disableEditText(mEtProductName);
             disableEditText(mEtPrice);
             disableEditText(mEtQuantity);
@@ -141,6 +141,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             //3. (EditorActivity) insertMode is false and editMode is true - user clicked on edit button - edit product (all fields enabled and pre-filled, buttons increaseQuantity, decreaseQuantity, order, save, delete)
         } else if (!insertMode && editMode){
+            setTitle(R.string.editor_activity_title_edit_product);
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
             mSaveProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
