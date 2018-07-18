@@ -68,33 +68,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public void decreaseQuantity(int id, int quantity){
 
-        if (quantity == 0){
-            Toast.makeText(this, getString(R.string.toast_quantity_zero), Toast.LENGTH_LONG).show();
-
-        } else if (quantity > 0) {
-
-            quantity = quantity + QUANTITY_SALE;
-            ContentValues values = new ContentValues();
-            values.put(BookshelfEntry.COLUMN_PROD_QUANTITY, quantity);
-
-            Uri uri = ContentUris.withAppendedId(BookshelfEntry.CONTENT_URI_PRODUCTS, id);
-            int rowsUpdated = getContentResolver().update(uri, values, null, null);
-
-            if (rowsUpdated==0){
-
-                Toast.makeText(this, getString(R.string.toast_update_failed), Toast.LENGTH_SHORT).show();
-
-            }else {
-
-                Toast.makeText(this, getString(R.string.toast_update_success), Toast.LENGTH_SHORT).show();
-
-            }
-
-        }
-
-    }
 
     public void editItem (int id){
         editClicked = true;
