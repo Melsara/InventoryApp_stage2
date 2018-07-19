@@ -28,11 +28,12 @@
     <string name="delete_all_dialog_msg">Delete all products?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="menu_action_delete_all_entries">Delete all products</string>
     <string name="unsaved_changes_dialog_msg">You have unsaved changes. Do you wish to go back?</string>
     <string name="discard">Yes, discard</string>
     <string name="keep_editing">No, keep editing</string>
     <string name="delete_product_failed">Error in deleting</string>
-    <string name="delete_product_success">Product deleted</string>
+    <string name="delete_product_success">Product(s) deleted</string>
     <string name="button_increase_quantity">+</string>
     <string name="button_decrease_quantity">-</string>
     <string name="button_order">Order</string>

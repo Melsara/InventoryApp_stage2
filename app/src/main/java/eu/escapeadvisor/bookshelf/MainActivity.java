@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -24,6 +26,7 @@ import eu.escapeadvisor.bookshelf.data.BookshelfContract.BookshelfEntry;
 import static eu.escapeadvisor.bookshelf.GlobalConstant.QUANTITY_SALE;
 import static eu.escapeadvisor.bookshelf.HelperClass.createIntent;
 import static eu.escapeadvisor.bookshelf.HelperClass.createIntentWIthId;
+import static eu.escapeadvisor.bookshelf.HelperClass.showDeleteConfirmationDialog;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -118,6 +121,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         emptyView = findViewById(R.id.empty_view);
         listView.setEmptyView(emptyView);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu options from the res/menu/menu_catalog.xml file.
+        // This adds menu items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_catalog, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+            case R.id.menu_action_delete_all_entries:
+                showDeleteConfirmationDialog(BookshelfEntry.CONTENT_URI_PRODUCTS, MainActivity.this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

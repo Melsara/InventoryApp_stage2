@@ -1,8 +1,11 @@
 package eu.escapeadvisor.bookshelf;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.escapeadvisor.bookshelf.data.BookshelfContract;
 
@@ -126,5 +131,69 @@ public class HelperClass {
         if (string.equals(null) || string.equals("")) {
             throw new IllegalArgumentException(error);
         }
+    }
+
+    public static void deletePet(Uri mCurrentProductUri, CharSequence stringResourceSuccess, CharSequence stringResourceFail, Context context) {
+        int mRowsDeleted = 0;
+        if (mCurrentProductUri != null) {
+            mRowsDeleted = context.getContentResolver().delete(mCurrentProductUri,
+                    null,
+                    null);
+            if (!(context instanceof MainActivity)) {
+                //This means we are in an Activity which is not MainActivity, so we can safely close it.
+                ((Activity) context).finish();
+            }
+        }
+
+        if (mRowsDeleted == 0) {
+            Toast.makeText(context, stringResourceFail, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, stringResourceSuccess, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener, Context context) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the product.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public static void showDeleteConfirmationDialog(final Uri mCurrentProductUri, final Context context) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deletePet(mCurrentProductUri, context.getResources().getString(R.string.delete_product_success), context.getResources().getString(R.string.delete_product_failed), context);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

@@ -1,6 +1,5 @@
 package eu.escapeadvisor.bookshelf;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -11,8 +10,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -31,13 +32,14 @@ import static eu.escapeadvisor.bookshelf.HelperClass.disableButton;
 import static eu.escapeadvisor.bookshelf.HelperClass.disableEditText;
 import static eu.escapeadvisor.bookshelf.HelperClass.helperGetText;
 import static eu.escapeadvisor.bookshelf.HelperClass.increaseQuantity;
+import static eu.escapeadvisor.bookshelf.HelperClass.showDeleteConfirmationDialog;
+import static eu.escapeadvisor.bookshelf.HelperClass.showUnsavedChangesDialog;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     BookCursorAdapter bookCursorAdapter;
     private static final int BOOK_LOADER = 0;
     int mRowsUpdated;
-    int mRowsDeleted;
     private Uri mCurrentProductUri;
     private Boolean editMode;
     private Boolean insertMode;
@@ -53,6 +55,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Button mIncreaseQuantity;
     private Button mDecreaseQuantity;
     private Button mOrder;
+
+    private DialogInterface.OnClickListener discardButtonClickListener;
 
     private String currentSupplierPhoneNumber;
     private int currentQuantity;
@@ -78,7 +82,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mDeleteProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDeleteConfirmationDialog();
+                showDeleteConfirmationDialog(mCurrentProductUri, EditorActivity.this);
             }
         });
 
@@ -151,6 +155,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
         }
+
+        discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
     }
 
     @Override
@@ -229,18 +242,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
-                        finish();
-                    }
-                };
-
         // Show dialog that there are unsaved changes
-        showUnsavedChangesDialog(discardButtonClickListener);
+        showUnsavedChangesDialog(discardButtonClickListener, EditorActivity.this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to a click on the "Save" menu option
+            case android.R.id.home:
+                // If the product hasn't changed, continue with navigating up to parent activity
+                if (!mProductHasChanged) {
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
+
+                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+                // Show dialog that there are unsaved changes
+                showUnsavedChangesDialog(discardButtonClickListener, EditorActivity.this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setActivityComponent() {
@@ -324,7 +346,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         } else {
 
-            if(productNameIsEmpty || priceIsEmpty
+            if (productNameIsEmpty || priceIsEmpty
                     || quantityIsEmpty || supplierNameIsEmpty
                     || supplierPhoneIsEmpty) {
                 return;
@@ -347,71 +369,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
 
         }
-
-    }
-
-    private void showDeleteConfirmationDialog() {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                deletePet();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    private void showUnsavedChangesDialog(
-            DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.unsaved_changes_dialog_msg);
-        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    /**
-     * Perform the deletion of the pet in the database.
-     */
-    private void deletePet() {
-        if (mCurrentProductUri != null) {
-            mRowsDeleted = getContentResolver().delete(mCurrentProductUri,
-                    null,
-                    null);
-        }
-
-        if (mRowsDeleted == 0) {
-            editorToast.makeText(this, getString(R.string.delete_product_failed), toastDuration).show();
-        } else {
-            editorToast.makeText(this, getString(R.string.delete_product_success), toastDuration).show();
-        }
-
-        finish();
 
     }
 
