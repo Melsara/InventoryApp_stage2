@@ -128,7 +128,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
 
-            //2. insertMode is false and editMode is false - user clicked on the item - see details (all fields disabled and pre-filled, no buttons)
+            //2. insertMode is false and editMode is false - user clicked on the item - see details (all fields disabled and pre-filled,  decrease/increase/delete/order buttons)
         } else if (!insertMode && !editMode) {
             setTitle(getString(R.string.editor_activity_title_details_product));
             disableEditText(mEtProductName);
@@ -136,10 +136,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             disableEditText(mEtQuantity);
             disableEditText(mEtSupplierName);
             disableEditText(mEtSupplierPhoneNumber);
-            disableButton(mIncreaseQuantity);
-            disableButton(mDecreaseQuantity);
-            disableButton(mOrder);
-            disableButton(mDeleteProduct);
             disableButton(mSaveProduct);
 
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
